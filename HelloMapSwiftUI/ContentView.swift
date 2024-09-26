@@ -16,6 +16,7 @@ struct ContentView: View {
     @State private var mapType = "標準"
     @State private var searchKeyWord = ""
     @State private var userTrackingMode:MapUserTrackingMode = .follow
+    @StateObject private var locationManagerDelegate:LocationDelegate = LocationDelegate()
     private var locationManager = CLLocationManager()
     let location = CLLocationCoordinate2D(
         latitude: 25.04729,
@@ -44,6 +45,7 @@ struct ContentView: View {
         var initialRegion = [
             MKMapItem(placemark: MKPlacemark(coordinate: l1)),
             MKMapItem(placemark: MKPlacemark(coordinate: l2))]
+        
         VStack {
             Picker("", selection: $mapType){
                 ForEach(typesName,id:\.self){ type in
@@ -102,12 +104,25 @@ struct ContentView: View {
                 withAnimation(.easeInOut(duration: 1)) {
                     scale = 1
                 }
+
+
+                
             }
             .onAppear()
             {
                 initialRegion.removeAll()
                 locationManager.requestWhenInUseAuthorization()
-       
+                locationManager.delegate = locationManagerDelegate
+                //                if CLLocationManager.locationServicesEnabled() {
+                //                    locationManager.startUpdatingLocation()
+                //                }
+                //                Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+                //                    if let center = locationManagerDelegate.location?.coordinate {
+                //                        camPosition = .region(MKCoordinateRegion(
+                //                            center: center,
+                //                            span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)))
+                //                    }
+                //                }
                 
             }
 //            .onChange(of: searchResult) {
